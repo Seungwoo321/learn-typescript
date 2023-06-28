@@ -1,8 +1,12 @@
 const Router = require('@koa/router')
 const router = new Router()
 const config = require('../config')
-const services = require('./libs/remote')
-const { buildMonthArrayFromLatest } = require('./libs/utils')
+const services = require('../libs/remote')
+const { buildMonthArrayFromLatest } = require('../libs/utils')
+
+router.get('/', async ctx => {
+  ctx.body = 'Hello Koa!!'
+})
 
 router.get('/ts-learn/months', async ctx => {
   try {

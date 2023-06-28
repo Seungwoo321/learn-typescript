@@ -145,7 +145,7 @@
 #### 공통 파라메터
 
 - url: <https://kosis.kr/openapi/Param/statisticsParameterData.do?method=getList>
-- apiKey: `ZGJlODM1ZDU2MmRkODdjNmM5MGMwODFkMjUyZTY0NDA=`
+- apiKey: `개별 발급`
 - format: `json`
 - prdSe: `M`
 - outputFields: (option) 응답필드(출력변수 선택)

@@ -1,7 +1,8 @@
 const Koa = require('koa');
 const cors = require('@koa/cors');
 const bodyParser = require('koa-bodyparser');
-const router = require('./router')
+const router = require('./routes/index')
+const createError = require('http-errors');
 const app = new Koa();
 
 // logger
@@ -19,27 +20,14 @@ app.use(async (ctx, next) => {
   ctx.set('X-Response-Time', `${ms}ms`);
 });
 
-
-app.on('error', (err, ctx) => {
-  console.error('server error', err, ctx)
-});
-
-app.use(cors());
 app.use(bodyParser());
+app.use(cors());
 app.use(router.routes());
 app.use(router.allowedMethods());
 
-router.get('/', async ctx => {
-  ctx.body = 'Hello Koa!!'
-})
+// 404
+app.use(async (ctx, next) => {
+  next(createError(404));
+});
 
-exports.start = async () => {
-  try {
-    const port = 3000
-    await app.listen(port)
-    console.log(`Connected on port ${port}`)
-  } catch (err) {
-    console.log('Something wen wrong')
-    console.log(err)
-  }
-}
+module.exports = app
