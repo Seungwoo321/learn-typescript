@@ -10,13 +10,7 @@
 
 ## UI 화면
 
-1차 UI 와이어 프레임
-
-![UI_1](./wire_fraame_1.jpg)
-
-2차 UI 와이어 프레임
-
-최종 UI
+![demo](./demo.png)
 
 ## 참고 자료
 
