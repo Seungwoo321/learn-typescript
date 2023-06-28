@@ -38,7 +38,6 @@ ol {
 .flex {
   display: flex;
 }
-
 .column {
   flex-direction: column;
 }
@@ -61,12 +60,12 @@ body {
   color: white;
 }
 
-main {
-  padding: 0 1rem;
-}
+/* .main-index {
+  padding: 0 0.5rem;
+} */
 
 /* element specific */
-header>h1 {
+header > h1 {
   font-size: 2rem;
   font-weight: 600;
   padding: 1.2rem 0;
@@ -84,7 +83,7 @@ header>h1 {
   text-align: center;
 }
 
-.month-board>p {
+.month-board > p {
   font-size: 1.2rem;
   font-weight: 400;
   padding: 1.2rem 0 0.5rem 0;
@@ -98,13 +97,12 @@ header>h1 {
 
 .select-month {
   margin-top: 1rem;
-  ;
   background-color: #5b5656;
   width: 100%;
   height: 696px;
 }
 
-.select-month>p {
+.select-month > p {
   text-align: center;
   font-size: 1.25rem;
   padding: 1.25rem 0 0.75rem 0;
@@ -148,15 +146,16 @@ header>h1 {
   color: #f7a543;
 }
 
-.summary-title {
-  padding: 0.5rem 0;
+.leading-title,
+.coincident-title {
+  padding: 1rem 0;
   font-size: 1.25rem;
 }
 
-.total {
+.main-index {
   font-size: 3rem;
   font-weight: 600;
-  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .list-wrapper {
@@ -164,35 +163,43 @@ header>h1 {
 }
 
 .leading-list {
-  padding: 1rem;
   height: 100%;
   overflow: hidden;
   overflow-y: auto;
 }
 
 .list-item-b {
+  padding: 0 0.5rem;
   height: 35px;
   border-bottom: solid 1px rgb(155, 155, 155);
   color: #f5eaea;
   cursor: pointer;
 }
 
-.list-item-b>.leading {
+.list-item-b > .leading {
   padding: 0 0.4rem;
   font-size: 1.125rem;
   font-weight: 550;
 }
 
-.list-item-b>.coincident {
+.list-item-b > .coincident {
   padding: 0 0.4rem;
   font-size: 1.125rem;
   font-weight: 550;
 }
+
+/* .list-item-b > p {
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+} */
 
 .coincident-container {
   margin-left: 1rem;
   background-color: #5b5656;
   width: 100%;
+  height: 440px;
   text-align: center;
 }
 
@@ -201,7 +208,6 @@ header>h1 {
 }
 
 .coincident-list {
-  padding: 1rem;
   height: 100%;
   overflow: hidden;
   overflow-y: auto;

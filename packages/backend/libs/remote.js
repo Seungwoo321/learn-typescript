@@ -45,6 +45,7 @@ const services = {
     })
     return response.data.map(item => {
       return {
+        isMainIndex: item.C1.length === 3,
         code: item.C1,
         codeName: item.C1_NM,
         codeNameEng: item.C1_NM_ENG,
