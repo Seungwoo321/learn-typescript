@@ -1,0 +1,23 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src",
+    "serve": "pm2 start src"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@koa/cors": "^4.0.0",
+    "@koa/router": "^12.0.0",
+    "@types/koa__router": "^12.0.0"
+  },
+  "dependencies": {
+    "axios": "^1.4.0",
+    "koa": "^2.14.2",
+    "koa-bodyparser": "^4.4.1",
+    "qs": "^6.11.2"
+  }
+}

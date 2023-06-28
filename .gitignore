@@ -1,3 +1,7 @@
+# vscode
+.history
+.vscode
+
 # Logs
 logs
 *.log
