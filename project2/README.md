@@ -6,7 +6,7 @@
 
 1차 UI
 
-[!](./wire_fraame_1.jpg)
+![UI_1](./wire_fraame_1.jpg)
 
 ## 참고 자료
 
