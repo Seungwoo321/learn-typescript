@@ -1,0 +1,35 @@
+service: economic-indicators-service
+frameworkVersion: '3'
+
+plugins:
+  - serverless-dotenv-plugin
+useDotenv: true
+provider:
+  name: aws
+  runtime: nodejs18.x
+  profile: economic-indicators-service-profile
+  stage: production
+  region: ap-northeast-2
+  memorySize: 256
+
+functions:
+  ts-learn-api:
+    handler: serverless.handler
+    environment:
+      KOSIS_API_KEY: ${env:KOSIS_API_KEY}
+      KOSIS_USER_STATS_ID_LEADING: ${env:KOSIS_USER_STATS_ID_LEADING}
+      KOSIS_USER_STATS_ID_COINCIDENT: ${env:KOSIS_USER_STATS_ID_COINCIDENT}
+    events:
+      - httpApi:
+          path: /
+          method: get
+      - httpApi:
+          path: /v1/ts-learn/months
+          method: get
+      - httpApi:
+          path: /v1/ts-learn/months/{month}/indexes/{indexName}/compositions
+          method: get
+      - httpApi:
+          path: /v1/ts-learn/indicators/{code}/latest
+          method: get
+

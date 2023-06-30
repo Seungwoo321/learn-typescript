@@ -1,0 +1,26 @@
+{
+  "name": "serverless",
+  "version": "1.0.0",
+  "description": "캡틴판교님의 타입스크립트 실전 프로젝트의 강의를 수강 중 \"코로나 세계 현황판\" 만들기에서 사용중인 API가 만료되었습니다. 이를 대체하는 API를 사용하는 백엔드 프로젝트 입니다.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Seungwoo, Lee <seungwoo321@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "@koa/cors": "^4.0.0",
+    "@koa/router": "^12.0.0",
+    "axios": "^1.4.0",
+    "dotenv": "^16.3.1",
+    "koa": "^2.14.2",
+    "koa-bodyparser": "^4.4.1",
+    "serverless-http": "^3.2.0",
+    "serverless-dotenv-plugin": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/koa__router": "^12.0.0"
+  }
+}

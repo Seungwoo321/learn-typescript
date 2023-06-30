@@ -1,4 +1,4 @@
-# 경기종합지수 대시보드 만들기 백엔드
+# 경기종합지수 대시보드 만들기 백엔드 (serverless)
 
 캡틴판교님의 타입스크립트 실전 프로젝트의 강의를 수강 중 "코로나 세계 현황판" 만들기에서 사용중인 API가 만료되었습니다. 이를 대체하는 API를 사용하는 백엔드 프로젝트 입니다.
 
@@ -88,7 +88,7 @@
     }
     ```
 
-### GET /learn-ts/indicators/:code/latest
+### GET /learn-ts/latest/indicators/:code
 
 - Description
   - 최근 24개월의 지표 값 조회

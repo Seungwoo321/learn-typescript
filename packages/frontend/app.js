@@ -1,4 +1,4 @@
-const baseUrl = 'http://localhost:3000/ts-learn'
+const baseUrl = 'https://ez3qceako9.execute-api.ap-northeast-2.amazonaws.com/v1/ts-learn'
 
 // utils
 function $(selector) {
@@ -57,7 +57,7 @@ function fetchIndexCompositionInfo(indexName, month) {
 }
 
 function fetchLatestIndicatorsByCode(code) {
-  const url = `${baseUrl}/latest/indicators/${code}`
+  const url = `${baseUrl}/indicators/${code}/latest`
   return axios.get(url)
 }
 

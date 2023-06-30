@@ -29,7 +29,7 @@ router.get('/ts-learn/months/:month/indexes/:indexName/compositions', async ctx 
   }
 })
 
-router.get('/ts-learn/latest/indicators/:code', async ctx => {
+router.get('/ts-learn/indicators/:code/latest', async ctx => {
   try {
     const tblId = config.DT_1C8016.OPTIONS.tblId
     const code = ctx.params.code
