@@ -88,7 +88,7 @@
     }
     ```
 
-### GET /learn-ts/latest/indicators/:code
+### GET /learn-ts/indicators/:code/latest
 
 - Description
   - 최근 24개월의 지표 값 조회
