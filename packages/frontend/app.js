@@ -244,7 +244,7 @@ const lineChart = (function () {
 })();
 
 function addChartData (dataset) {
-  if (!dataset.data) return
+  if (!dataset.data) return;
   const chart = lineChart.getInstance();
   chart.data.datasets.push(dataset);
   chart.options.scales.y1.display = true;
