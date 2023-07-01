@@ -247,7 +247,10 @@ function addChartData (dataset) {
   if (!dataset.data) return;
   const chart = lineChart.getInstance();
   chart.data.datasets.push(dataset);
-  chart.options.scales.y1.display = true;
+  if (chart.data.datasets.length > 2) {
+    chart.options.scales.y1.display = true;
+  }
+  
 }
 
 function removeChartData () {
@@ -272,7 +275,7 @@ function makeChartdataset (arr) {
     label: arr[0].codeName,
     data: arr.slice().map(v => +v.value),
     borderColor: chartBorderColor(arr),
-    yAxisID: arr[0].isMain ? 'y' : 'y1'
+    yAxisID: arr[0].isMainIndex ? 'y' : 'y1'
   };
 }
 function setChartData(arr1 = [], arr2 = []) {
