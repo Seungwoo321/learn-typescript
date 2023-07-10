@@ -5,7 +5,7 @@ const services = require('../libs/remote')
 const { buildMonthArrayFromLatest } = require('../libs/utils')
 
 router.get('/', async ctx => {
-  ctx.body = 'Hello Koa!!'
+  ctx.body = 'Hello World! Backend'
 })
 
 router.get('/ts-learn/months', async ctx => {

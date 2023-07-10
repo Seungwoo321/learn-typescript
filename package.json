@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev:fe": "npm run dev --workspace=frontend",
-    "dev:be": "npm run dev --workspace=backend",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:serverless": "npm run dev --workspace=serverless",
     "dev": "npm run dev --workspace=backend & sleep 3 & npm run dev --workspace=frontend"
   },
   "keywords": [],
@@ -13,6 +14,7 @@
   "license": "ISC",
   "workspaces": [
     "packages/frontend",
-    "packages/backend"
+    "packages/backend",
+    "packages/serverless"
   ]
 }
