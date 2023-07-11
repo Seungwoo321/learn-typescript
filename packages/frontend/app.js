@@ -9,10 +9,11 @@ function monthFormmater (str) {
 }
 function chartBorderColor (arr) {
   if (!arr.length) return null;
-  return {
+  const colors = {
     A01: '#f7a543',
     B02: '#7fcd91',
-  }[arr[0].code] || '#fff';
+  }
+  return colors[arr[0].code] || '#fff';
 };
 // DOM
 const selectedMonth = $('.selected-month');
