@@ -16,8 +16,8 @@ function chartBorderColor (arr: Array<any>) {
 };
 // DOM
 const selectedMonth = $('.selected-month');
-const leadingIndex = $('.leading');
-const coincidentIndex = $('.coincident');
+const leadingIndex = $('.leading') as HTMLParagraphElement;
+const coincidentIndex = $('.coincident') as HTMLParagraphElement;
 const momthList = $('.month-list');
 const leadingList = $('.leading-list');
 const coincidentList = $('.coincident-list');
