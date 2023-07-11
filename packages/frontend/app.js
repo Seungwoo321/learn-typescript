@@ -291,7 +291,7 @@ function setLeadingTitle (data) {
 }
 
 function setCoincidentTitle (data) {
-  coincidentTitle.innerHtml = data;
+  coincidentTitle.innerHTML = data;
 }
 
 function setLeadingIndexByMain (data) {
