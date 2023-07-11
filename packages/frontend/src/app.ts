@@ -1,13 +1,13 @@
 const baseUrl = 'https://ez3qceako9.execute-api.ap-northeast-2.amazonaws.com/v1/ts-learn'
 
 // utils
-function $(selector: any) {
+function $(selector: string) {
   return document.querySelector(selector);
 }
-function monthFormmater (str: any) {
+function monthFormmater (str: string) {
   return str.substring(0, 4) + '-' + str.substring(4);
 }
-function chartBorderColor (arr: any) {
+function chartBorderColor (arr: Array<any>) {
   if (!arr.length) return null;
   return {
     A01: '#f7a543',
@@ -26,7 +26,7 @@ const coincidentList = $('.coincident-list');
 const leadingSpinner = createSpinnerElement('leading-spinner');
 const coincidentSpinner = createSpinnerElement('coincident-spinner');
 
-function createSpinnerElement (id: any) {
+function createSpinnerElement (id: string) {
   const wrapperDiv = document.createElement('div');
   wrapperDiv.setAttribute('id', id);
   wrapperDiv.setAttribute(
@@ -51,12 +51,17 @@ function fetchMonths () {
   return axios.get(url);
 }
 
-function fetchIndexCompositionInfo (indexName: any, month: any) {
+enum IndexType {
+  Leading = 'Leading',
+  Coincident = 'Coincident'
+}
+
+function fetchIndexCompositionInfo (indexName: IndexType, month: string) {
   const url = `${baseUrl}/months/${month}/indexes/${indexName}/compositions`;
   return axios.get(url);
 }
 
-function fetchLatestIndicatorsByCode (code: any) {
+function fetchLatestIndicatorsByCode (code: string) {
   const url = `${baseUrl}/indicators/${code}/latest`;
   return axios.get(url);
 }
@@ -190,8 +195,8 @@ async function setupData () {
   const { data: months } = await fetchMonths();
   setMonthList(months);
   setSelectMonth(months);
-  const { data: leadingIndexInfo } = await fetchIndexCompositionInfo('leading', months[0]);
-  const { data: coincidentIndexInfo } = await fetchIndexCompositionInfo('coincident', months[0]);
+  const { data: leadingIndexInfo } = await fetchIndexCompositionInfo(IndexType.Leading, months[0]);
+  const { data: coincidentIndexInfo } = await fetchIndexCompositionInfo(IndexType.Coincident, months[0]);
   setLeadingIndexByMain(leadingIndexInfo);
   setCoincidentIndexByMain(coincidentIndexInfo);
   setLeadingComposition(leadingIndexInfo);
