@@ -19,8 +19,6 @@ const selectedMonth = $('.selected-month');
 const leadingIndex = $('.leading');
 const coincidentIndex = $('.coincident');
 const momthList = $('.month-list');
-const leadingTitle = $('.leadingTitle');
-const coincidentTitle = $('.coincidentTitle');
 const leadingList = $('.leading-list');
 const coincidentList = $('.coincident-list');
 const leadingSpinner = createSpinnerElement('leading-spinner');
@@ -286,20 +284,12 @@ function setChartData(arr1 = [], arr2 = []) {
   if (arr2.length) renderChart(makeChartdataset(arr2), [])
 }
 
-function setLeadingTitle (data) {
-  leadingTitle.innerHTML = data;
-}
-
-function setCoincidentTitle (data) {
-  coincidentTitle.innerHTML = data;
-}
-
 function setLeadingIndexByMain (data) {
-  leadingIndex.innerHTML = data.find(v => v.isMainIndex).value;
+  leadingIndex.innerText = data.find(v => v.isMainIndex).value;
 }
 
 function setCoincidentIndexByMain (data) {
-  coincidentIndex.innerHTML = data.find(v => v.isMainIndex).value;
+  coincidentIndex.innerText = data.find(v => v.isMainIndex).value;
 }
 
 function setSelectMonth (data) {
