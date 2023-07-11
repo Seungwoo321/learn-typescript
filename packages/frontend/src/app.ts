@@ -1,20 +1,21 @@
-const baseUrl = 'https://ez3qceako9.execute-api.ap-northeast-2.amazonaws.com/v1/ts-learn'
+const baseUrl =
+  'https://ez3qceako9.execute-api.ap-northeast-2.amazonaws.com/v1/ts-learn';
 
 // utils
 function $(selector: string) {
   return document.querySelector(selector);
 }
-function monthFormmater (str: string) {
+function monthFormmater(str: string) {
   return str.substring(0, 4) + '-' + str.substring(4);
 }
-function chartBorderColor (arr: Array<any>) {
+function chartBorderColor(arr: Array<any>) {
   if (!arr.length) return null;
-  const colors : any = {
+  const colors: any = {
     A01: '#f7a543',
     B02: '#7fcd91',
-  }
+  };
   return colors[arr[0].code] || '#fff';
-};
+}
 // DOM
 const selectedMonth = $('.selected-month');
 const leadingIndex = $('.leading') as HTMLParagraphElement;
@@ -25,7 +26,7 @@ const coincidentList = $('.coincident-list');
 const leadingSpinner = createSpinnerElement('leading-spinner');
 const coincidentSpinner = createSpinnerElement('coincident-spinner');
 
-function createSpinnerElement (id: string) {
+function createSpinnerElement(id: string) {
   const wrapperDiv = document.createElement('div');
   wrapperDiv.setAttribute('id', id);
   wrapperDiv.setAttribute(
@@ -42,43 +43,43 @@ function createSpinnerElement (id: string) {
 
 // state
 let isLeadingLoading = false;
-let isCoincidentLoading = false;
+const isCoincidentLoading = false;
 
 // api
-function fetchMonths () {
+function fetchMonths() {
   const url = `${baseUrl}/months`;
   return axios.get(url);
 }
 
 enum IndexType {
   Leading = 'leading',
-  Coincident = 'coincident'
+  Coincident = 'coincident',
 }
 
-function fetchIndexCompositionInfo (indexName: IndexType, month: string) {
+function fetchIndexCompositionInfo(indexName: IndexType, month: string) {
   const url = `${baseUrl}/months/${month}/indexes/${indexName}/compositions`;
   return axios.get(url);
 }
 
-function fetchLatestIndicatorsByCode (code: string) {
+function fetchLatestIndicatorsByCode(code: string) {
   const url = `${baseUrl}/indicators/${code}/latest`;
   return axios.get(url);
 }
 
 // methods
-function startApp () {
+function startApp() {
   setupData();
   initEvents();
 }
 
 // events
-function initEvents () {
+function initEvents() {
   momthList.addEventListener('click', handleMonthListClick);
   leadingList.addEventListener('click', handleIndicatorListClick);
   coincidentList.addEventListener('click', handleIndicatorListClick);
 }
 
-async function handleIndicatorListClick (event: any) {
+async function handleIndicatorListClick(event: any) {
   let selectedId;
   let selectedMainId;
   if (
@@ -104,7 +105,7 @@ async function handleIndicatorListClick (event: any) {
   isLeadingLoading = false;
 }
 
-async function handleMonthListClick (event: any) {
+async function handleMonthListClick(event: any) {
   let selectedMonth;
   if (
     event.target instanceof HTMLParagraphElement ||
@@ -123,8 +124,14 @@ async function handleMonthListClick (event: any) {
   startLoadingAnimation();
   isLeadingLoading = true;
   setSelectMonth([selectedMonth]);
-  const { data: leadingIndexInfo } = await fetchIndexCompositionInfo(IndexType.Leading, selectedMonth);
-  const { data: coincidentIndexInfo } = await fetchIndexCompositionInfo(IndexType.Coincident, selectedMonth);
+  const { data: leadingIndexInfo } = await fetchIndexCompositionInfo(
+    IndexType.Leading,
+    selectedMonth,
+  );
+  const { data: coincidentIndexInfo } = await fetchIndexCompositionInfo(
+    IndexType.Coincident,
+    selectedMonth,
+  );
   setLeadingIndexByMain(leadingIndexInfo);
   setCoincidentIndexByMain(coincidentIndexInfo);
   endLoadingAnimation();
@@ -134,12 +141,15 @@ async function handleMonthListClick (event: any) {
   renderChart();
 }
 
-function setLeadingComposition (data: any) {
+function setLeadingComposition(data: any) {
   const mainCode = data.find((v: any) => v.isMainIndex).code;
   data.forEach((value: any) => {
     if (value.isMainIndex) return;
     const li = document.createElement('li');
-    li.setAttribute('class', 'list-item-b flex align-center justify-space-between');
+    li.setAttribute(
+      'class',
+      'list-item-b flex align-center justify-space-between',
+    );
     li.setAttribute('id', value.code);
     li.setAttribute('data-main-code', mainCode);
     const p = document.createElement('p');
@@ -153,16 +163,19 @@ function setLeadingComposition (data: any) {
   });
 }
 
-function clearLeadingList () {
+function clearLeadingList() {
   leadingList.innerHTML = null;
 }
 
-function setCoincidentComposition (data: any) {
+function setCoincidentComposition(data: any) {
   const mainCode = data.find((v: any) => v.isMainIndex).code;
   data.forEach((value: any) => {
     if (value.isMainIndex) return;
     const li = document.createElement('li');
-    li.setAttribute('class', 'list-item-b flex align-center justify-space-between');
+    li.setAttribute(
+      'class',
+      'list-item-b flex align-center justify-space-between',
+    );
     li.setAttribute('id', value.code);
     li.setAttribute('data-main-code', mainCode);
     const p = document.createElement('p');
@@ -176,39 +189,53 @@ function setCoincidentComposition (data: any) {
   });
 }
 
-function clearCoincidentList () {
+function clearCoincidentList() {
   coincidentList.innerHTML = null;
 }
 
-function startLoadingAnimation () {
+function startLoadingAnimation() {
   leadingList.appendChild(leadingSpinner);
   coincidentList.appendChild(coincidentSpinner);
 }
 
-function endLoadingAnimation () {
+function endLoadingAnimation() {
   leadingList.removeChild(leadingSpinner);
   coincidentList.removeChild(coincidentSpinner);
 }
 
-async function setupData () {
+async function setupData() {
   const { data: months } = await fetchMonths();
   setMonthList(months);
   setSelectMonth(months);
-  const { data: leadingIndexInfo } = await fetchIndexCompositionInfo(IndexType.Leading, months[0]);
-  const { data: coincidentIndexInfo } = await fetchIndexCompositionInfo(IndexType.Coincident, months[0]);
+  const { data: leadingIndexInfo } = await fetchIndexCompositionInfo(
+    IndexType.Leading,
+    months[0],
+  );
+  const { data: coincidentIndexInfo } = await fetchIndexCompositionInfo(
+    IndexType.Coincident,
+    months[0],
+  );
   setLeadingIndexByMain(leadingIndexInfo);
   setCoincidentIndexByMain(coincidentIndexInfo);
   setLeadingComposition(leadingIndexInfo);
   setCoincidentComposition(coincidentIndexInfo);
-  const leadingIndexCode = leadingIndexInfo.find((v: any) => v.isMainIndex).code;
-  const coincidentIndexCode = coincidentIndexInfo.find((v: any) => v.isMainIndex).code;
-  const { data: leadingLatest } = await fetchLatestIndicatorsByCode(leadingIndexCode);
-  const { data: coincidentLatest } = await fetchLatestIndicatorsByCode(coincidentIndexCode);
+  const leadingIndexCode = leadingIndexInfo.find(
+    (v: any) => v.isMainIndex,
+  ).code;
+  const coincidentIndexCode = coincidentIndexInfo.find(
+    (v: any) => v.isMainIndex,
+  ).code;
+  const { data: leadingLatest } = await fetchLatestIndicatorsByCode(
+    leadingIndexCode,
+  );
+  const { data: coincidentLatest } = await fetchLatestIndicatorsByCode(
+    coincidentIndexCode,
+  );
   setChartData(leadingLatest, coincidentLatest);
 }
 const lineChart = (function () {
   let instance: any;
-  function setInstance () {
+  function setInstance() {
     const ctx = $('#lineChart').getContext('2d');
     Chart.defaults.color = '#f5eaea';
     Chart.defaults.font.family = 'Exo 2';
@@ -216,48 +243,47 @@ const lineChart = (function () {
       type: 'line',
       data: {
         labels: [],
-        datasets: []
+        datasets: [],
       },
       options: {
         scales: {
           y: {
             type: 'linear',
             display: true,
-            position: 'left'
+            position: 'left',
           },
           y1: {
             type: 'linear',
             display: false,
             position: 'right',
             grid: {
-              drawOnChartArea: false
-            }
-          }
-        }
-      }
+              drawOnChartArea: false,
+            },
+          },
+        },
+      },
     });
   }
   return {
-    getInstance () {
+    getInstance() {
       if (!instance) {
         instance = setInstance();
       }
       return instance;
-    }
-  }
+    },
+  };
 })();
 
-function addChartData (dataset: any) {
+function addChartData(dataset: any) {
   if (!dataset.data) return;
   const chart = lineChart.getInstance();
   chart.data.datasets.push(dataset);
   if (chart.data.datasets.length > 2) {
     chart.options.scales.y1.display = true;
   }
-  
 }
 
-function removeChartData () {
+function removeChartData() {
   const chart = lineChart.getInstance();
   if (chart.data.datasets.length > 2) {
     chart.data.datasets.pop();
@@ -265,7 +291,7 @@ function removeChartData () {
   }
 }
 
-function renderChart (dataset = {}, labels: any = []) {
+function renderChart(dataset = {}, labels: any = []) {
   const chart = lineChart.getInstance();
   if (labels.length) {
     chart.data.labels = labels;
@@ -274,36 +300,40 @@ function renderChart (dataset = {}, labels: any = []) {
   addChartData(dataset);
   chart.update();
 }
-function makeChartdataset (arr: any) {
+function makeChartdataset(arr: any) {
   return {
     label: arr[0].codeName,
     data: arr.slice().map((v: any) => +v.value),
     borderColor: chartBorderColor(arr),
-    yAxisID: arr[0].isMainIndex ? 'y' : 'y1'
+    yAxisID: arr[0].isMainIndex ? 'y' : 'y1',
   };
 }
 function setChartData(arr1: any = [], arr2: any = []) {
   const chartLabel = arr1
     .slice()
-    .map((value: any) => new Date(value.month.slice(0, 4), value.month.slice(4) - 1).toLocaleString().slice(0, 8));
+    .map((value: any) =>
+      new Date(value.month.slice(0, 4), value.month.slice(4) - 1)
+        .toLocaleString()
+        .slice(0, 8),
+    );
   if (arr1.length) renderChart(makeChartdataset(arr1), chartLabel);
-  if (arr2.length) renderChart(makeChartdataset(arr2), [])
+  if (arr2.length) renderChart(makeChartdataset(arr2), []);
 }
 
-function setLeadingIndexByMain (data: any) {
+function setLeadingIndexByMain(data: any) {
   leadingIndex.innerText = data.find((v: any) => v.isMainIndex).value;
 }
 
-function setCoincidentIndexByMain (data: any) {
+function setCoincidentIndexByMain(data: any) {
   coincidentIndex.innerText = data.find((v: any) => v.isMainIndex).value;
 }
 
-function setSelectMonth (data: any) {
+function setSelectMonth(data: any) {
   selectedMonth.innerHTML = monthFormmater(data[0]);
   selectedMonth.setAttribute('id', data[0]);
 }
 
-function setMonthList (data: any) {
+function setMonthList(data: any) {
   const latestMonths = data.slice(0, 24);
   latestMonths.forEach((value: any) => {
     const li = document.createElement('li');
