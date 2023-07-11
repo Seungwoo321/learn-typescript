@@ -201,8 +201,8 @@ async function setupData () {
   setCoincidentIndexByMain(coincidentIndexInfo);
   setLeadingComposition(leadingIndexInfo);
   setCoincidentComposition(coincidentIndexInfo);
-  const leadingIndexCode = leadingIndexInfo.find(v => v.isMainIndex).code;
-  const coincidentIndexCode = coincidentIndexInfo.find(v => v.isMainIndex).code;
+  const leadingIndexCode = leadingIndexInfo.find((v: any) => v.isMainIndex).code;
+  const coincidentIndexCode = coincidentIndexInfo.find((v: any) => v.isMainIndex).code;
   const { data: leadingLatest } = await fetchLatestIndicatorsByCode(leadingIndexCode);
   const { data: coincidentLatest } = await fetchLatestIndicatorsByCode(coincidentIndexCode);
   setChartData(leadingLatest, coincidentLatest);
