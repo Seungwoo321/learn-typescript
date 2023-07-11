@@ -52,8 +52,8 @@ function fetchMonths () {
 }
 
 enum IndexType {
-  Leading = 'Leading',
-  Coincident = 'Coincident'
+  Leading = 'leading',
+  Coincident = 'coincident'
 }
 
 function fetchIndexCompositionInfo (indexName: IndexType, month: string) {
@@ -124,8 +124,8 @@ async function handleMonthListClick (event: any) {
   startLoadingAnimation();
   isLeadingLoading = true;
   setSelectMonth([selectedMonth]);
-  const { data: leadingIndexInfo } = await fetchIndexCompositionInfo('leading', selectedMonth);
-  const { data: coincidentIndexInfo } = await fetchIndexCompositionInfo('coincident', selectedMonth);
+  const { data: leadingIndexInfo } = await fetchIndexCompositionInfo(IndexType.Leading, selectedMonth);
+  const { data: coincidentIndexInfo } = await fetchIndexCompositionInfo(IndexType.Coincident, selectedMonth);
   setLeadingIndexByMain(leadingIndexInfo);
   setCoincidentIndexByMain(coincidentIndexInfo);
   endLoadingAnimation();
