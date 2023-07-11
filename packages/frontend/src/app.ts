@@ -9,7 +9,7 @@ function monthFormmater (str: any) {
 }
 function chartBorderColor (arr: any) {
   if (!arr.length) return null;
-  const colors = {
+  const colors : any = {
     A01: '#f7a543',
     B02: '#7fcd91',
   }
