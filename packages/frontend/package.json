@@ -5,8 +5,12 @@
   "main": "app.js",
   "scripts": {
     "dev": "live-server .",
-    "start": "live-server ."
+    "start": "live-server .",
+    "build": "tsc"
   },
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.1.6"
+  }
 }
