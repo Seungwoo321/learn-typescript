@@ -1,13 +1,13 @@
 const baseUrl = 'https://ez3qceako9.execute-api.ap-northeast-2.amazonaws.com/v1/ts-learn'
 
 // utils
-function $(selector) {
+function $(selector: any) {
   return document.querySelector(selector);
 }
-function monthFormmater (str) {
+function monthFormmater (str: any) {
   return str.substring(0, 4) + '-' + str.substring(4);
 }
-function chartBorderColor (arr) {
+function chartBorderColor (arr: any) {
   if (!arr.length) return null;
   return {
     A01: '#f7a543',
@@ -26,7 +26,7 @@ const coincidentList = $('.coincident-list');
 const leadingSpinner = createSpinnerElement('leading-spinner');
 const coincidentSpinner = createSpinnerElement('coincident-spinner');
 
-function createSpinnerElement (id) {
+function createSpinnerElement (id: any) {
   const wrapperDiv = document.createElement('div');
   wrapperDiv.setAttribute('id', id);
   wrapperDiv.setAttribute(
@@ -51,12 +51,12 @@ function fetchMonths () {
   return axios.get(url);
 }
 
-function fetchIndexCompositionInfo (indexName, month) {
+function fetchIndexCompositionInfo (indexName: any, month: any) {
   const url = `${baseUrl}/months/${month}/indexes/${indexName}/compositions`;
   return axios.get(url);
 }
 
-function fetchLatestIndicatorsByCode (code) {
+function fetchLatestIndicatorsByCode (code: any) {
   const url = `${baseUrl}/indicators/${code}/latest`;
   return axios.get(url);
 }
@@ -74,7 +74,7 @@ function initEvents () {
   coincidentList.addEventListener('click', handleIndicatorListClick);
 }
 
-async function handleIndicatorListClick (event) {
+async function handleIndicatorListClick (event: any) {
   let selectedId;
   let selectedMainId;
   if (
@@ -100,7 +100,7 @@ async function handleIndicatorListClick (event) {
   isLeadingLoading = false;
 }
 
-async function handleMonthListClick (event) {
+async function handleMonthListClick (event: any) {
   let selectedMonth;
   if (
     event.target instanceof HTMLParagraphElement ||
@@ -130,9 +130,9 @@ async function handleMonthListClick (event) {
   renderChart();
 }
 
-function setLeadingComposition (data) {
-  const mainCode = data.find(v => v.isMainIndex).code;
-  data.forEach(value => {
+function setLeadingComposition (data: any) {
+  const mainCode = data.find((v: any) => v.isMainIndex).code;
+  data.forEach((value: any) => {
     if (value.isMainIndex) return;
     const li = document.createElement('li');
     li.setAttribute('class', 'list-item-b flex align-center justify-space-between');
@@ -153,9 +153,9 @@ function clearLeadingList () {
   leadingList.innerHTML = null;
 }
 
-function setCoincidentComposition (data) {
-  const mainCode = data.find(v => v.isMainIndex).code;
-  data.forEach(value => {
+function setCoincidentComposition (data: any) {
+  const mainCode = data.find((v: any) => v.isMainIndex).code;
+  data.forEach((value: any) => {
     if (value.isMainIndex) return;
     const li = document.createElement('li');
     li.setAttribute('class', 'list-item-b flex align-center justify-space-between');
@@ -203,7 +203,7 @@ async function setupData () {
   setChartData(leadingLatest, coincidentLatest);
 }
 const lineChart = (function () {
-  let instance;
+  let instance: any;
   function setInstance () {
     const ctx = $('#lineChart').getContext('2d');
     Chart.defaults.color = '#f5eaea';
@@ -243,7 +243,7 @@ const lineChart = (function () {
   }
 })();
 
-function addChartData (dataset) {
+function addChartData (dataset: any) {
   if (!dataset.data) return;
   const chart = lineChart.getInstance();
   chart.data.datasets.push(dataset);
@@ -261,7 +261,7 @@ function removeChartData () {
   }
 }
 
-function renderChart (dataset = {}, labels = []) {
+function renderChart (dataset = {}, labels: any = []) {
   const chart = lineChart.getInstance();
   if (labels.length) {
     chart.data.labels = labels;
@@ -270,46 +270,46 @@ function renderChart (dataset = {}, labels = []) {
   addChartData(dataset);
   chart.update();
 }
-function makeChartdataset (arr) {
+function makeChartdataset (arr: any) {
   return {
     label: arr[0].codeName,
-    data: arr.slice().map(v => +v.value),
+    data: arr.slice().map((v: any) => +v.value),
     borderColor: chartBorderColor(arr),
     yAxisID: arr[0].isMainIndex ? 'y' : 'y1'
   };
 }
-function setChartData(arr1 = [], arr2 = []) {
+function setChartData(arr1: any = [], arr2: any = []) {
   const chartLabel = arr1
     .slice()
-    .map(value => new Date(value.month.slice(0, 4), value.month.slice(4) - 1).toLocaleString().slice(0, 8));
+    .map((value: any) => new Date(value.month.slice(0, 4), value.month.slice(4) - 1).toLocaleString().slice(0, 8));
   if (arr1.length) renderChart(makeChartdataset(arr1), chartLabel);
   if (arr2.length) renderChart(makeChartdataset(arr2), [])
 }
 
-function setLeadingTitle (data) {
+function setLeadingTitle (data: any) {
   leadingTitle.innerHTML = data;
 }
 
-function setCoincidentTitle (data) {
+function setCoincidentTitle (data: any) {
   coincidentTitle.innerHtml = data;
 }
 
-function setLeadingIndexByMain (data) {
-  leadingIndex.innerHTML = data.find(v => v.isMainIndex).value;
+function setLeadingIndexByMain (data: any) {
+  leadingIndex.innerHTML = data.find((v: any) => v.isMainIndex).value;
 }
 
-function setCoincidentIndexByMain (data) {
-  coincidentIndex.innerHTML = data.find(v => v.isMainIndex).value;
+function setCoincidentIndexByMain (data: any) {
+  coincidentIndex.innerHTML = data.find((v: any) => v.isMainIndex).value;
 }
 
-function setSelectMonth (data) {
+function setSelectMonth (data: any) {
   selectedMonth.innerHTML = monthFormmater(data[0]);
   selectedMonth.setAttribute('id', data[0]);
 }
 
-function setMonthList (data) {
+function setMonthList (data: any) {
   const latestMonths = data.slice(0, 24);
-  latestMonths.forEach(value => {
+  latestMonths.forEach((value: any) => {
     const li = document.createElement('li');
     li.setAttribute('class', 'list-item align-center');
     li.setAttribute('id', value);
