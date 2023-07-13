@@ -45,8 +45,7 @@ function createSpinnerElement(id: string) {
 }
 
 // state
-let isLeadingLoading = false;
-const isCoincidentLoading = false;
+let isLoading = false;
 
 // api
 function fetchMonths(): Promise<AxiosResponse<MonthsResponse>> {
@@ -87,7 +86,7 @@ function initEvents() {
   coincidentList.addEventListener('click', handleIndicatorListClick);
 }
 
-async function handleIndicatorListClick(event: any) {
+async function handleIndicatorListClick(event: MouseEvent) {
   let selectedId;
   let selectedMainId;
   if (
@@ -101,19 +100,19 @@ async function handleIndicatorListClick(event: any) {
     selectedId = event.target.id;
     selectedMainId = event.target.getAttribute('data-main-code');
   }
-  if (isLeadingLoading) {
+  if (isLoading) {
     return;
   }
   if (!selectedId || !selectedMainId) {
     return;
   }
-  isLeadingLoading = true;
+  isLoading = true;
   const { data: selectedData } = await fetchLatestIndicatorsByCode(selectedId);
   setChartData(selectedData);
-  isLeadingLoading = false;
+  isLoading = false;
 }
 
-async function handleMonthListClick(event: any) {
+async function handleMonthListClick(event: MouseEvent) {
   let selectedMonth;
   if (
     event.target instanceof HTMLParagraphElement ||
@@ -124,13 +123,13 @@ async function handleMonthListClick(event: any) {
   if (event.target instanceof HTMLLIElement) {
     selectedMonth = event.target.id;
   }
-  if (isLeadingLoading) {
+  if (isLoading) {
     return;
   }
   clearLeadingList();
   clearCoincidentList();
   startLoadingAnimation();
-  isLeadingLoading = true;
+  isLoading = true;
   setSelectMonth([selectedMonth]);
   const { data: leadingIndexInfo } = await fetchIndexCompositionInfo(
     IndexType.Leading,
@@ -145,7 +144,7 @@ async function handleMonthListClick(event: any) {
   endLoadingAnimation();
   setLeadingComposition(leadingIndexInfo);
   setCoincidentComposition(coincidentIndexInfo);
-  isLeadingLoading = false;
+  isLoading = false;
   renderChart();
 }
 
@@ -238,7 +237,7 @@ async function setupData() {
   setChartData(leadingLatest, coincidentLatest);
 }
 const lineChart = (function () {
-  let instance: any;
+  let instance: undefined;
   function setInstance() {
     const ctx = $('#lineChart').getContext('2d');
     Chart.defaults.color = '#f5eaea';
