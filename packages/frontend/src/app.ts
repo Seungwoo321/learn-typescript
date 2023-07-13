@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { Chart } from 'chart.js';
 const baseUrl =
   'https://ez3qceako9.execute-api.ap-northeast-2.amazonaws.com/v1/ts-learn';
@@ -48,7 +48,7 @@ let isLeadingLoading = false;
 const isCoincidentLoading = false;
 
 // api
-function fetchMonths() {
+function fetchMonths(): Promise<AxiosResponse<string[]>> {
   const url = `${baseUrl}/months`;
   return axios.get(url);
 }
@@ -70,6 +70,9 @@ function fetchLatestIndicatorsByCode(code: string) {
 
 // methods
 function startApp() {
+  fetchMonths().then(result => {
+    console.log(result.data);
+  });
   setupData();
   initEvents();
 }
