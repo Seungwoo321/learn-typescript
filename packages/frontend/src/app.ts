@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { Chart, registerables } from 'chart.js';
+import { Indicator, IndicatorsResponse, MonthsResponse } from './indicator';
 const baseUrl =
   'https://ez3qceako9.execute-api.ap-northeast-2.amazonaws.com/v1/ts-learn';
 
@@ -44,11 +45,10 @@ function createSpinnerElement(id: string) {
 }
 
 // state
-let isLeadingLoading = false;
-const isCoincidentLoading = false;
+let isLoading = false;
 
 // api
-function fetchMonths(): Promise<AxiosResponse<string[]>> {
+function fetchMonths(): Promise<AxiosResponse<MonthsResponse>> {
   const url = `${baseUrl}/months`;
   return axios.get(url);
 }
@@ -58,21 +58,23 @@ enum IndexType {
   Coincident = 'coincident',
 }
 
-function fetchIndexCompositionInfo(indexName: IndexType, month: string) {
+function fetchIndexCompositionInfo(
+  indexName: IndexType,
+  month: string,
+): Promise<AxiosResponse<IndicatorsResponse>> {
   const url = `${baseUrl}/months/${month}/indexes/${indexName}/compositions`;
   return axios.get(url);
 }
 
-function fetchLatestIndicatorsByCode(code: string) {
+function fetchLatestIndicatorsByCode(
+  code: string,
+): Promise<AxiosResponse<IndicatorsResponse>> {
   const url = `${baseUrl}/indicators/${code}/latest`;
   return axios.get(url);
 }
 
 // methods
 function startApp() {
-  fetchMonths().then(result => {
-    console.log(result.data);
-  });
   setupData();
   initEvents();
 }
@@ -84,7 +86,7 @@ function initEvents() {
   coincidentList.addEventListener('click', handleIndicatorListClick);
 }
 
-async function handleIndicatorListClick(event: any) {
+async function handleIndicatorListClick(event: MouseEvent) {
   let selectedId;
   let selectedMainId;
   if (
@@ -98,19 +100,19 @@ async function handleIndicatorListClick(event: any) {
     selectedId = event.target.id;
     selectedMainId = event.target.getAttribute('data-main-code');
   }
-  if (isLeadingLoading) {
+  if (isLoading) {
     return;
   }
   if (!selectedId || !selectedMainId) {
     return;
   }
-  isLeadingLoading = true;
+  isLoading = true;
   const { data: selectedData } = await fetchLatestIndicatorsByCode(selectedId);
   setChartData(selectedData);
-  isLeadingLoading = false;
+  isLoading = false;
 }
 
-async function handleMonthListClick(event: any) {
+async function handleMonthListClick(event: MouseEvent) {
   let selectedMonth;
   if (
     event.target instanceof HTMLParagraphElement ||
@@ -121,13 +123,13 @@ async function handleMonthListClick(event: any) {
   if (event.target instanceof HTMLLIElement) {
     selectedMonth = event.target.id;
   }
-  if (isLeadingLoading) {
+  if (isLoading) {
     return;
   }
   clearLeadingList();
   clearCoincidentList();
   startLoadingAnimation();
-  isLeadingLoading = true;
+  isLoading = true;
   setSelectMonth([selectedMonth]);
   const { data: leadingIndexInfo } = await fetchIndexCompositionInfo(
     IndexType.Leading,
@@ -142,13 +144,13 @@ async function handleMonthListClick(event: any) {
   endLoadingAnimation();
   setLeadingComposition(leadingIndexInfo);
   setCoincidentComposition(coincidentIndexInfo);
-  isLeadingLoading = false;
+  isLoading = false;
   renderChart();
 }
 
-function setLeadingComposition(data: any) {
-  const mainCode = data.find((v: any) => v.isMainIndex).code;
-  data.forEach((value: any) => {
+function setLeadingComposition(data: IndicatorsResponse) {
+  const mainCode = data.find(v => v.isMainIndex).code;
+  data.forEach(value => {
     if (value.isMainIndex) return;
     const li = document.createElement('li');
     li.setAttribute(
@@ -172,9 +174,9 @@ function clearLeadingList() {
   leadingList.innerHTML = null;
 }
 
-function setCoincidentComposition(data: any) {
-  const mainCode = data.find((v: any) => v.isMainIndex).code;
-  data.forEach((value: any) => {
+function setCoincidentComposition(data: IndicatorsResponse) {
+  const mainCode = data.find(v => v.isMainIndex).code;
+  data.forEach(value => {
     if (value.isMainIndex) return;
     const li = document.createElement('li');
     li.setAttribute(
@@ -224,12 +226,8 @@ async function setupData() {
   setCoincidentIndexByMain(coincidentIndexInfo);
   setLeadingComposition(leadingIndexInfo);
   setCoincidentComposition(coincidentIndexInfo);
-  const leadingIndexCode = leadingIndexInfo.find(
-    (v: any) => v.isMainIndex,
-  ).code;
-  const coincidentIndexCode = coincidentIndexInfo.find(
-    (v: any) => v.isMainIndex,
-  ).code;
+  const leadingIndexCode = leadingIndexInfo.find(v => v.isMainIndex).code;
+  const coincidentIndexCode = coincidentIndexInfo.find(v => v.isMainIndex).code;
   const { data: leadingLatest } = await fetchLatestIndicatorsByCode(
     leadingIndexCode,
   );
@@ -239,7 +237,7 @@ async function setupData() {
   setChartData(leadingLatest, coincidentLatest);
 }
 const lineChart = (function () {
-  let instance: any;
+  let instance: undefined;
   function setInstance() {
     const ctx = $('#lineChart').getContext('2d');
     Chart.register(...registerables);
@@ -326,22 +324,22 @@ function setChartData(arr1: any = [], arr2: any = []) {
   if (arr2.length) renderChart(makeChartdataset(arr2), []);
 }
 
-function setLeadingIndexByMain(data: any) {
-  leadingIndex.innerText = data.find((v: any) => v.isMainIndex).value;
+function setLeadingIndexByMain(data: IndicatorsResponse) {
+  leadingIndex.innerText = data.find((v: Indicator) => v.isMainIndex).value;
 }
 
-function setCoincidentIndexByMain(data: any) {
-  coincidentIndex.innerText = data.find((v: any) => v.isMainIndex).value;
+function setCoincidentIndexByMain(data: IndicatorsResponse) {
+  coincidentIndex.innerText = data.find((v: Indicator) => v.isMainIndex).value;
 }
 
-function setSelectMonth(data: any) {
+function setSelectMonth(data: MonthsResponse) {
   selectedMonth.innerHTML = monthFormmater(data[0]);
   selectedMonth.setAttribute('id', data[0]);
 }
 
-function setMonthList(data: any) {
+function setMonthList(data: MonthsResponse) {
   const latestMonths = data.slice(0, 24);
-  latestMonths.forEach((value: any) => {
+  latestMonths.forEach((value: string) => {
     const li = document.createElement('li');
     li.setAttribute('class', 'list-item align-center');
     li.setAttribute('id', value);
