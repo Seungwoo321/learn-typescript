@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { Chart } from 'chart.js';
+import { Chart, ChartDataset } from 'chart.js';
 import { Indicator, IndicatorsResponse, MonthsResponse } from './indicator';
 const baseUrl =
   'https://ez3qceako9.execute-api.ap-northeast-2.amazonaws.com/v1/ts-learn';
@@ -8,16 +8,20 @@ const baseUrl =
 function $(selector: string) {
   return document.querySelector(selector);
 }
-function monthFormmater(str: string) {
+function monthFormmater(str: string): string {
   return str.substring(0, 4) + '-' + str.substring(4);
 }
-function chartBorderColor(arr: Array<any>) {
+function chartBorderColor(arr: IndicatorsResponse): string {
   if (!arr.length) return null;
-  const colors: any = {
-    A01: '#f7a543',
-    B02: '#7fcd91',
-  };
-  return colors[arr[0].code] || '#fff';
+  const code = arr[0].code;
+  switch (code) {
+    case 'A01':
+      return '#f7a543';
+    case 'B02':
+      return '#7fcd91';
+    default:
+      return '#fff';
+  }
 }
 // DOM
 const selectedMonth = $('.selected-month');
@@ -108,7 +112,7 @@ async function handleIndicatorListClick(event: MouseEvent) {
   }
   isLoading = true;
   const { data: selectedData } = await fetchLatestIndicatorsByCode(selectedId);
-  setChartData(selectedData);
+  setChartData(selectedData, []);
   isLoading = false;
 }
 
@@ -237,9 +241,10 @@ async function setupData() {
   setChartData(leadingLatest, coincidentLatest);
 }
 const lineChart = (function () {
-  let instance: undefined;
-  function setInstance() {
-    const ctx = $('#lineChart').getContext('2d');
+  let instance: Chart;
+  function setInstance(): Chart {
+    const lineChart = $('#lineChart') as HTMLCanvasElement;
+    const ctx = lineChart.getContext('2d');
     Chart.defaults.color = '#f5eaea';
     Chart.defaults.font.family = 'Exo 2';
     return new Chart(ctx, {
@@ -277,7 +282,7 @@ const lineChart = (function () {
   };
 })();
 
-function addChartData(dataset: any) {
+function addChartData(dataset?: ChartDataset) {
   if (!dataset.data) return;
   const chart = lineChart.getInstance();
   chart.data.datasets.push(dataset);
@@ -294,7 +299,7 @@ function removeChartData() {
   }
 }
 
-function renderChart(dataset = {}, labels: any = []) {
+function renderChart(dataset?: ChartDataset, labels?: string[]) {
   const chart = lineChart.getInstance();
   if (labels.length) {
     chart.data.labels = labels;
@@ -303,19 +308,22 @@ function renderChart(dataset = {}, labels: any = []) {
   addChartData(dataset);
   chart.update();
 }
-function makeChartdataset(arr: any) {
+function makeChartdataset(arr: IndicatorsResponse): ChartDataset {
   return {
     label: arr[0].codeName,
-    data: arr.slice().map((v: any) => +v.value),
+    data: arr.slice().map(v => +v.value),
     borderColor: chartBorderColor(arr),
     yAxisID: arr[0].isMainIndex ? 'y' : 'y1',
   };
 }
-function setChartData(arr1: any = [], arr2: any = []) {
+function setChartData(arr1: IndicatorsResponse, arr2: IndicatorsResponse) {
   const chartLabel = arr1
     .slice()
-    .map((value: any) =>
-      new Date(value.month.slice(0, 4), value.month.slice(4) - 1)
+    .map(value =>
+      new Date(
+        Number(value.month.slice(0, 4)),
+        Number(value.month.slice(4)) - 1,
+      )
         .toLocaleString()
         .slice(0, 8),
     );
