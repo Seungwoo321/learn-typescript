@@ -6,9 +6,7 @@
   "scripts": {
     "dev:frontend": "npm run dev --workspace=frontend",
     "dev:backend": "npm run dev --workspace=backend",
-    "dev": "npm run dev --workspace=backend & sleep 3 & npm run dev --workspace=frontend",
-    "build:frontend": "npm run build --workspace=frontend",
-    "preview:frontend": "npm run preview --workspace=frontend"
+    "dev": "npm run dev --workspace=backend & sleep 3 & npm run dev --workspace=frontend"
   },
   "keywords": [],
   "author": "",
@@ -16,8 +14,5 @@
   "workspaces": [
     "packages/frontend",
     "packages/backend"
-  ],
-  "devDependencies": {
-    "vite": "^4.4.3"
-  }
+  ]
 }
