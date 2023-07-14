@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { Chart } from 'chart.js';
+import { Chart, registerables } from 'chart.js';
+
 const baseUrl =
   'https://ez3qceako9.execute-api.ap-northeast-2.amazonaws.com/v1/ts-learn';
 
@@ -239,6 +240,7 @@ const lineChart = (function () {
   let instance: any;
   function setInstance() {
     const ctx = $('#lineChart').getContext('2d');
+    Chart.register(...registerables);
     Chart.defaults.color = '#f5eaea';
     Chart.defaults.font.family = 'Exo 2';
     return new Chart(ctx, {
