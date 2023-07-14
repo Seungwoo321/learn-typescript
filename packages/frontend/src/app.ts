@@ -12,7 +12,9 @@ function monthFormmater(str: string): string {
   return str.substring(0, 4) + '-' + str.substring(4);
 }
 function chartBorderColor(arr: IndicatorsResponse): string {
-  if (!arr.length) return null;
+  if (!arr.length) {
+    return '';
+  }
   const code = arr[0].code;
   switch (code) {
     case 'A01':
@@ -24,12 +26,12 @@ function chartBorderColor(arr: IndicatorsResponse): string {
   }
 }
 // DOM
-const selectedMonth = $('.selected-month');
+const selectedMonth = $('.selected-month') as HTMLSpanElement;
 const leadingIndex = $('.leading') as HTMLParagraphElement;
 const coincidentIndex = $('.coincident') as HTMLParagraphElement;
-const momthList = $('.month-list');
-const leadingList = $('.leading-list');
-const coincidentList = $('.coincident-list');
+const momthList = $('.month-list') as HTMLOListElement;
+const leadingList = $('.leading-list') as HTMLOListElement;
+const coincidentList = $('.coincident-list') as HTMLOListElement;
 const leadingSpinner = createSpinnerElement('leading-spinner');
 const coincidentSpinner = createSpinnerElement('coincident-spinner');
 
@@ -85,9 +87,9 @@ function startApp() {
 
 // events
 function initEvents() {
-  momthList.addEventListener('click', handleMonthListClick);
-  leadingList.addEventListener('click', handleIndicatorListClick);
-  coincidentList.addEventListener('click', handleIndicatorListClick);
+  momthList?.addEventListener('click', handleMonthListClick);
+  leadingList?.addEventListener('click', handleIndicatorListClick);
+  coincidentList?.addEventListener('click', handleIndicatorListClick);
 }
 
 async function handleIndicatorListClick(event: MouseEvent) {
@@ -97,8 +99,8 @@ async function handleIndicatorListClick(event: MouseEvent) {
     event.target instanceof HTMLParagraphElement ||
     event.target instanceof HTMLSpanElement
   ) {
-    selectedId = event.target.parentElement.id;
-    selectedMainId = event.target.parentElement.getAttribute('data-main-code');
+    selectedId = event.target.parentElement?.id;
+    selectedMainId = event.target.parentElement?.getAttribute('data-main-code');
   }
   if (event.target instanceof HTMLLIElement) {
     selectedId = event.target.id;
@@ -122,12 +124,12 @@ async function handleMonthListClick(event: MouseEvent) {
     event.target instanceof HTMLParagraphElement ||
     event.target instanceof HTMLSpanElement
   ) {
-    selectedMonth = event.target.parentElement.id;
+    selectedMonth = event.target.parentElement?.id;
   }
   if (event.target instanceof HTMLLIElement) {
     selectedMonth = event.target.id;
   }
-  if (isLoading) {
+  if (isLoading || !selectedMonth) {
     return;
   }
   clearLeadingList();
@@ -153,7 +155,8 @@ async function handleMonthListClick(event: MouseEvent) {
 }
 
 function setLeadingComposition(data: IndicatorsResponse) {
-  const mainCode = data.find(v => v.isMainIndex).code;
+  const mainCode = data.find(v => v.isMainIndex)?.code;
+  if (!mainCode) return;
   data.forEach(value => {
     if (value.isMainIndex) return;
     const li = document.createElement('li');
@@ -175,11 +178,12 @@ function setLeadingComposition(data: IndicatorsResponse) {
 }
 
 function clearLeadingList() {
-  leadingList.innerHTML = null;
+  leadingList.innerHTML = '';
 }
 
 function setCoincidentComposition(data: IndicatorsResponse) {
-  const mainCode = data.find(v => v.isMainIndex).code;
+  const mainCode = data.find(v => v.isMainIndex)?.code;
+  if (!mainCode) return;
   data.forEach(value => {
     if (value.isMainIndex) return;
     const li = document.createElement('li');
@@ -201,7 +205,7 @@ function setCoincidentComposition(data: IndicatorsResponse) {
 }
 
 function clearCoincidentList() {
-  coincidentList.innerHTML = null;
+  coincidentList.innerHTML = '';
 }
 
 function startLoadingAnimation() {
@@ -230,8 +234,12 @@ async function setupData() {
   setCoincidentIndexByMain(coincidentIndexInfo);
   setLeadingComposition(leadingIndexInfo);
   setCoincidentComposition(coincidentIndexInfo);
-  const leadingIndexCode = leadingIndexInfo.find(v => v.isMainIndex).code;
-  const coincidentIndexCode = coincidentIndexInfo.find(v => v.isMainIndex).code;
+  const leadingIndexCode = leadingIndexInfo.find(v => v.isMainIndex)?.code;
+  const coincidentIndexCode = coincidentIndexInfo.find(v => v.isMainIndex)
+    ?.code;
+  if (!leadingIndexCode || !coincidentIndexCode) {
+    return;
+  }
   const { data: leadingLatest } = await fetchLatestIndicatorsByCode(
     leadingIndexCode,
   );
@@ -244,7 +252,7 @@ const lineChart = (function () {
   let instance: Chart;
   function setInstance(): Chart {
     const lineChart = $('#lineChart') as HTMLCanvasElement;
-    const ctx = lineChart.getContext('2d');
+    const ctx = lineChart.getContext('2d') as CanvasRenderingContext2D;
     Chart.register(...registerables);
     Chart.defaults.color = '#f5eaea';
     Chart.defaults.font.family = 'Exo 2';
@@ -284,17 +292,17 @@ const lineChart = (function () {
 })();
 
 function addChartData(dataset?: ChartDataset) {
-  if (!dataset.data) return;
+  if (!dataset?.data) return;
   const chart = lineChart.getInstance();
   chart.data.datasets.push(dataset);
-  if (chart.data.datasets.length > 2) {
+  if (chart.data.datasets.length > 2 && chart.options.scales?.y1) {
     chart.options.scales.y1.display = true;
   }
 }
 
 function removeChartData() {
   const chart = lineChart.getInstance();
-  if (chart.data.datasets.length > 2) {
+  if (chart.data.datasets.length > 2 && chart.options.scales?.y1) {
     chart.data.datasets.pop();
     chart.options.scales.y1.display = false;
   }
@@ -302,7 +310,7 @@ function removeChartData() {
 
 function renderChart(dataset?: ChartDataset, labels?: string[]) {
   const chart = lineChart.getInstance();
-  if (labels.length) {
+  if (labels?.length) {
     chart.data.labels = labels;
   }
   removeChartData();
@@ -333,11 +341,13 @@ function setChartData(arr1: IndicatorsResponse, arr2: IndicatorsResponse) {
 }
 
 function setLeadingIndexByMain(data: IndicatorsResponse) {
-  leadingIndex.innerText = data.find((v: Indicator) => v.isMainIndex).value;
+  leadingIndex.innerText =
+    data.find((v: Indicator) => v.isMainIndex)?.value ?? '';
 }
 
 function setCoincidentIndexByMain(data: IndicatorsResponse) {
-  coincidentIndex.innerText = data.find((v: Indicator) => v.isMainIndex).value;
+  coincidentIndex.innerText =
+    data.find((v: Indicator) => v.isMainIndex)?.value ?? '';
 }
 
 function setSelectMonth(data: MonthsResponse) {
