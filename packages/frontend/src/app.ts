@@ -5,8 +5,8 @@ const baseUrl =
   'https://ez3qceako9.execute-api.ap-northeast-2.amazonaws.com/v1/ts-learn';
 
 // utils
-function $(selector: string) {
-  return document.querySelector(selector);
+function $<T extends HTMLElement>(selector: string) {
+  return document.querySelector(selector) as T;
 }
 function monthFormmater(str: string): string {
   return str.substring(0, 4) + '-' + str.substring(4);
@@ -26,12 +26,12 @@ function chartBorderColor(arr: IndicatorsResponse): string {
   }
 }
 // DOM
-const selectedMonth = $('.selected-month') as HTMLSpanElement;
-const leadingIndex = $('.leading') as HTMLParagraphElement;
-const coincidentIndex = $('.coincident') as HTMLParagraphElement;
-const momthList = $('.month-list') as HTMLOListElement;
-const leadingList = $('.leading-list') as HTMLOListElement;
-const coincidentList = $('.coincident-list') as HTMLOListElement;
+const selectedMonth = $<HTMLSpanElement>('.selected-month');
+const leadingIndex = $<HTMLParagraphElement>('.leading');
+const coincidentIndex = $<HTMLParagraphElement>('.coincident');
+const momthList = $<HTMLOListElement>('.month-list');
+const leadingList = $<HTMLOListElement>('.leading-list');
+const coincidentList = $<HTMLOListElement>('.coincident-list');
 const leadingSpinner = createSpinnerElement('leading-spinner');
 const coincidentSpinner = createSpinnerElement('coincident-spinner');
 
