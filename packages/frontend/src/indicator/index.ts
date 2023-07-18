@@ -1,3 +1,5 @@
+// src/indicator/index.ts
+
 export type MonthsResponse = string[];
 
 export interface Indicator {

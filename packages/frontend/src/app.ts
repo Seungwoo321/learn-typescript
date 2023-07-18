@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { Chart, ChartDataset, registerables } from 'chart.js';
+import { Chart, registerables } from 'chart.js';
 import { Indicator, IndicatorsResponse, MonthsResponse } from './indicator';
 const baseUrl =
   'https://ez3qceako9.execute-api.ap-northeast-2.amazonaws.com/v1/ts-learn';
@@ -11,7 +11,7 @@ function $(selector: string) {
 function monthFormmater(str: string): string {
   return str.substring(0, 4) + '-' + str.substring(4);
 }
-function chartBorderColor(arr: IndicatorsResponse): string {
+function chartBorderColor(arr: Array<any>): string {
   if (!arr.length) return null;
   const code = arr[0].code;
   switch (code) {
@@ -112,7 +112,7 @@ async function handleIndicatorListClick(event: MouseEvent) {
   }
   isLoading = true;
   const { data: selectedData } = await fetchLatestIndicatorsByCode(selectedId);
-  setChartData(selectedData, []);
+  setChartData(selectedData);
   isLoading = false;
 }
 
@@ -153,8 +153,8 @@ async function handleMonthListClick(event: MouseEvent) {
 }
 
 function setLeadingComposition(data: IndicatorsResponse) {
-  const mainCode = data.find(v => v.isMainIndex).code;
-  data.forEach(value => {
+  const mainCode = data.find((v: Indicator) => v.isMainIndex).code;
+  data.forEach((value: Indicator) => {
     if (value.isMainIndex) return;
     const li = document.createElement('li');
     li.setAttribute(
@@ -179,8 +179,8 @@ function clearLeadingList() {
 }
 
 function setCoincidentComposition(data: IndicatorsResponse) {
-  const mainCode = data.find(v => v.isMainIndex).code;
-  data.forEach(value => {
+  const mainCode = data.find((v: Indicator) => v.isMainIndex).code;
+  data.forEach((value: Indicator) => {
     if (value.isMainIndex) return;
     const li = document.createElement('li');
     li.setAttribute(
@@ -230,8 +230,12 @@ async function setupData() {
   setCoincidentIndexByMain(coincidentIndexInfo);
   setLeadingComposition(leadingIndexInfo);
   setCoincidentComposition(coincidentIndexInfo);
-  const leadingIndexCode = leadingIndexInfo.find(v => v.isMainIndex).code;
-  const coincidentIndexCode = coincidentIndexInfo.find(v => v.isMainIndex).code;
+  const leadingIndexCode = leadingIndexInfo.find(
+    (v: Indicator) => v.isMainIndex,
+  ).code;
+  const coincidentIndexCode = coincidentIndexInfo.find(
+    (v: Indicator) => v.isMainIndex,
+  ).code;
   const { data: leadingLatest } = await fetchLatestIndicatorsByCode(
     leadingIndexCode,
   );
@@ -241,10 +245,9 @@ async function setupData() {
   setChartData(leadingLatest, coincidentLatest);
 }
 const lineChart = (function () {
-  let instance: Chart;
-  function setInstance(): Chart {
-    const lineChart = $('#lineChart') as HTMLCanvasElement;
-    const ctx = lineChart.getContext('2d');
+  let instance: any;
+  function setInstance() {
+    const ctx = $('#lineChart').getContext('2d');
     Chart.register(...registerables);
     Chart.defaults.color = '#f5eaea';
     Chart.defaults.font.family = 'Exo 2';
@@ -283,7 +286,7 @@ const lineChart = (function () {
   };
 })();
 
-function addChartData(dataset?: ChartDataset) {
+function addChartData(dataset: any) {
   if (!dataset.data) return;
   const chart = lineChart.getInstance();
   chart.data.datasets.push(dataset);
@@ -300,7 +303,7 @@ function removeChartData() {
   }
 }
 
-function renderChart(dataset?: ChartDataset, labels?: string[]) {
+function renderChart(dataset = {}, labels: any[] = []) {
   const chart = lineChart.getInstance();
   if (labels.length) {
     chart.data.labels = labels;
@@ -309,22 +312,19 @@ function renderChart(dataset?: ChartDataset, labels?: string[]) {
   addChartData(dataset);
   chart.update();
 }
-function makeChartdataset(arr: IndicatorsResponse): ChartDataset {
+function makeChartdataset(arr: any) {
   return {
     label: arr[0].codeName,
-    data: arr.slice().map(v => +v.value),
+    data: arr.slice().map((v: any) => +v.value),
     borderColor: chartBorderColor(arr),
     yAxisID: arr[0].isMainIndex ? 'y' : 'y1',
   };
 }
-function setChartData(arr1: IndicatorsResponse, arr2: IndicatorsResponse) {
+function setChartData(arr1: any = [], arr2: any = []) {
   const chartLabel = arr1
     .slice()
-    .map(value =>
-      new Date(
-        Number(value.month.slice(0, 4)),
-        Number(value.month.slice(4)) - 1,
-      )
+    .map((value: any) =>
+      new Date(value.month.slice(0, 4), value.month.slice(4) - 1)
         .toLocaleString()
         .slice(0, 8),
     );
