@@ -9,11 +9,11 @@ function monthFormmater(str: string) {
   return str.substring(0, 4) + '-' + str.substring(4);
 }
 interface CodeColor {
-  [code: string]: string
+  [code: string]: string;
 }
-function chartBorderColor (arr: any): string {
+function chartBorderColor(arr: any): string {
   if (!arr.length) return null;
-  const colors : CodeColor = {
+  const colors: CodeColor = {
     A01: '#f7a543',
     B02: '#7fcd91',
   };
@@ -45,8 +45,7 @@ function createSpinnerElement(id: string) {
 }
 
 // state
-let isLeadingLoading = false;
-const isCoincidentLoading = false;
+let isLoading = false;
 
 // api
 function fetchMonths() {
@@ -82,11 +81,7 @@ function initEvents() {
   coincidentList.addEventListener('click', handleIndicatorListClick);
 }
 
-<<<<<<< HEAD
-async function handleIndicatorListClick(event: any) {
-=======
-async function handleIndicatorListClick (event: MouseEvent) {
->>>>>>> 1abee2ad2fd8f91a1319451ee28fad5d33765f87
+async function handleIndicatorListClick(event: MouseEvent) {
   let selectedId;
   let selectedMainId;
   if (
@@ -100,23 +95,19 @@ async function handleIndicatorListClick (event: MouseEvent) {
     selectedId = event.target.id;
     selectedMainId = event.target.getAttribute('data-main-code');
   }
-  if (isLeadingLoading) {
+  if (isLoading) {
     return;
   }
   if (!selectedId || !selectedMainId) {
     return;
   }
-  isLeadingLoading = true;
+  isLoading = true;
   const { data: selectedData } = await fetchLatestIndicatorsByCode(selectedId);
   setChartData(selectedData);
-  isLeadingLoading = false;
+  isLoading = false;
 }
 
-<<<<<<< HEAD
-async function handleMonthListClick(event: any) {
-=======
-async function handleMonthListClick (event: MouseEvent) {
->>>>>>> 1abee2ad2fd8f91a1319451ee28fad5d33765f87
+async function handleMonthListClick(event: MouseEvent) {
   let selectedMonth;
   if (
     event.target instanceof HTMLParagraphElement ||
@@ -127,13 +118,13 @@ async function handleMonthListClick (event: MouseEvent) {
   if (event.target instanceof HTMLLIElement) {
     selectedMonth = event.target.id;
   }
-  if (isLeadingLoading) {
+  if (isLoading) {
     return;
   }
   clearLeadingList();
   clearCoincidentList();
   startLoadingAnimation();
-  isLeadingLoading = true;
+  isLoading = true;
   setSelectMonth([selectedMonth]);
   const { data: leadingIndexInfo } = await fetchIndexCompositionInfo(
     IndexType.Leading,
@@ -148,7 +139,7 @@ async function handleMonthListClick (event: MouseEvent) {
   endLoadingAnimation();
   setLeadingComposition(leadingIndexInfo);
   setCoincidentComposition(coincidentIndexInfo);
-  isLeadingLoading = false;
+  isLoading = false;
   renderChart();
 }
 
@@ -302,7 +293,7 @@ function removeChartData() {
   }
 }
 
-function renderChart (dataset: any = [], labels: string[] = []) {
+function renderChart(dataset: any = [], labels: string[] = []) {
   const chart = lineChart.getInstance();
   if (labels.length) {
     chart.data.labels = labels;
