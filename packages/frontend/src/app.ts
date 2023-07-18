@@ -1,15 +1,18 @@
 const baseUrl = 'https://ez3qceako9.execute-api.ap-northeast-2.amazonaws.com/v1/ts-learn'
 
 // utils
-function $(selector: any) {
+function $(selector: string) {
   return document.querySelector(selector);
 }
-function monthFormmater (str: any) {
+function monthFormmater (str: string) {
   return str.substring(0, 4) + '-' + str.substring(4);
 }
-function chartBorderColor (arr: any) {
+interface CodeColor {
+  [code: string]: string
+}
+function chartBorderColor (arr: any): string {
   if (!arr.length) return null;
-  const colors : any = {
+  const colors : CodeColor = {
     A01: '#f7a543',
     B02: '#7fcd91',
   }
@@ -73,7 +76,7 @@ function initEvents () {
   coincidentList.addEventListener('click', handleIndicatorListClick);
 }
 
-async function handleIndicatorListClick (event: any) {
+async function handleIndicatorListClick (event: MouseEvent) {
   let selectedId;
   let selectedMainId;
   if (
@@ -99,7 +102,7 @@ async function handleIndicatorListClick (event: any) {
   isLeadingLoading = false;
 }
 
-async function handleMonthListClick (event: any) {
+async function handleMonthListClick (event: MouseEvent) {
   let selectedMonth;
   if (
     event.target instanceof HTMLParagraphElement ||
@@ -260,7 +263,7 @@ function removeChartData () {
   }
 }
 
-function renderChart (dataset = {}, labels: any = []) {
+function renderChart (dataset: any = [], labels: string[] = []) {
   const chart = lineChart.getInstance();
   if (labels.length) {
     chart.data.labels = labels;
