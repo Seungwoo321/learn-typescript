@@ -10,9 +10,12 @@ function $(selector: string) {
 function monthFormmater(str: string) {
   return str.substring(0, 4) + '-' + str.substring(4);
 }
-function chartBorderColor(arr: Array<any>) {
+interface CodeColor {
+  [code: string]: string;
+}
+function chartBorderColor(arr: any): string {
   if (!arr.length) return null;
-  const colors: any = {
+  const colors: CodeColor = {
     A01: '#f7a543',
     B02: '#7fcd91',
   };
@@ -293,7 +296,7 @@ function removeChartData() {
   }
 }
 
-function renderChart(dataset = {}, labels: any = []) {
+function renderChart(dataset: any = [], labels: string[] = []) {
   const chart = lineChart.getInstance();
   if (labels.length) {
     chart.data.labels = labels;
