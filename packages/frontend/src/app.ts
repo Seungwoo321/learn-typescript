@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import { Chart, registerables } from 'chart.js';
 import { MonthsResponse, IndicatorsResponse, Indicator } from './indicator';
 const baseUrl =
   'https://ez3qceako9.execute-api.ap-northeast-2.amazonaws.com/v1/ts-learn';
