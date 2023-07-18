@@ -12,3 +12,7 @@ export interface Indicator {
 }
 
 export type IndicatorsResponse = Indicator[];
+
+export interface CodeColor {
+  [code: string]: string;
+}
