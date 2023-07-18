@@ -8,9 +8,12 @@ function $(selector: string) {
 function monthFormmater(str: string) {
   return str.substring(0, 4) + '-' + str.substring(4);
 }
-function chartBorderColor(arr: Array<any>) {
+interface CodeColor {
+  [code: string]: string
+}
+function chartBorderColor (arr: any): string {
   if (!arr.length) return null;
-  const colors: any = {
+  const colors : CodeColor = {
     A01: '#f7a543',
     B02: '#7fcd91',
   };
@@ -79,7 +82,11 @@ function initEvents() {
   coincidentList.addEventListener('click', handleIndicatorListClick);
 }
 
+<<<<<<< HEAD
 async function handleIndicatorListClick(event: any) {
+=======
+async function handleIndicatorListClick (event: MouseEvent) {
+>>>>>>> 1abee2ad2fd8f91a1319451ee28fad5d33765f87
   let selectedId;
   let selectedMainId;
   if (
@@ -105,7 +112,11 @@ async function handleIndicatorListClick(event: any) {
   isLeadingLoading = false;
 }
 
+<<<<<<< HEAD
 async function handleMonthListClick(event: any) {
+=======
+async function handleMonthListClick (event: MouseEvent) {
+>>>>>>> 1abee2ad2fd8f91a1319451ee28fad5d33765f87
   let selectedMonth;
   if (
     event.target instanceof HTMLParagraphElement ||
@@ -291,7 +302,7 @@ function removeChartData() {
   }
 }
 
-function renderChart(dataset = {}, labels: any = []) {
+function renderChart (dataset: any = [], labels: string[] = []) {
   const chart = lineChart.getInstance();
   if (labels.length) {
     chart.data.labels = labels;
