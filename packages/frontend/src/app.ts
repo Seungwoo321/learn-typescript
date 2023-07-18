@@ -1,6 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { Chart, registerables } from 'chart.js';
-import { Indicator, IndicatorsResponse, MonthsResponse } from './indicator';
+import { MonthsResponse, IndicatorsResponse, Indicator } from './indicator';
 const baseUrl =
   'https://ez3qceako9.execute-api.ap-northeast-2.amazonaws.com/v1/ts-learn';
 
@@ -11,17 +10,16 @@ function $(selector: string) {
 function monthFormmater(str: string): string {
   return str.substring(0, 4) + '-' + str.substring(4);
 }
-function chartBorderColor(arr: Array<any>): string {
+interface CodeColor {
+  [code: string]: string;
+}
+function chartBorderColor(arr: any): string {
   if (!arr.length) return null;
-  const code = arr[0].code;
-  switch (code) {
-    case 'A01':
-      return '#f7a543';
-    case 'B02':
-      return '#7fcd91';
-    default:
-      return '#fff';
-  }
+  const colors: CodeColor = {
+    A01: '#f7a543',
+    B02: '#7fcd91',
+  };
+  return colors[arr[0].code] || '#fff';
 }
 // DOM
 const selectedMonth = $('.selected-month');
@@ -303,7 +301,7 @@ function removeChartData() {
   }
 }
 
-function renderChart(dataset = {}, labels: any[] = []) {
+function renderChart(dataset: any = [], labels: string[] = []) {
   const chart = lineChart.getInstance();
   if (labels.length) {
     chart.data.labels = labels;
