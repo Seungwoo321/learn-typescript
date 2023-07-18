@@ -17,7 +17,7 @@ function monthFormmater(str: string) {
   return str.substring(0, 4) + '-' + str.substring(4);
 }
 function chartBorderColor(arr: IndicatorsResponse): string {
-  if (!arr.length) return null;
+  if (!arr.length) return '';
   const colors: CodeColor = {
     A01: '#f7a543',
     B02: '#7fcd91',
