@@ -1,6 +1,11 @@
 import axios, { AxiosResponse } from 'axios';
-import { Chart, ChartDataset, registerables } from 'chart.js';
-import { Indicator, IndicatorsResponse, MonthsResponse } from './indicator';
+import { Chart, registerables, ChartDataset } from 'chart.js';
+import {
+  MonthsResponse,
+  IndicatorsResponse,
+  Indicator,
+  CodeColor,
+} from './indicator';
 const baseUrl =
   'https://ez3qceako9.execute-api.ap-northeast-2.amazonaws.com/v1/ts-learn';
 
@@ -8,22 +13,16 @@ const baseUrl =
 function $(selector: string) {
   return document.querySelector(selector);
 }
-function monthFormmater(str: string): string {
+function monthFormmater(str: string) {
   return str.substring(0, 4) + '-' + str.substring(4);
 }
 function chartBorderColor(arr: IndicatorsResponse): string {
-  if (!arr.length) {
-    return '';
-  }
-  const code = arr[0].code;
-  switch (code) {
-    case 'A01':
-      return '#f7a543';
-    case 'B02':
-      return '#7fcd91';
-    default:
-      return '#fff';
-  }
+  if (!arr.length) return null;
+  const colors: CodeColor = {
+    A01: '#f7a543',
+    B02: '#7fcd91',
+  };
+  return colors[arr[0].code] || '#fff';
 }
 // DOM
 const selectedMonth = $('.selected-month') as HTMLSpanElement;
@@ -92,7 +91,7 @@ function initEvents() {
   coincidentList?.addEventListener('click', handleIndicatorListClick);
 }
 
-async function handleIndicatorListClick(event: MouseEvent) {
+async function handleIndicatorListClick(event: Event) {
   let selectedId;
   let selectedMainId;
   if (
@@ -118,7 +117,7 @@ async function handleIndicatorListClick(event: MouseEvent) {
   isLoading = false;
 }
 
-async function handleMonthListClick(event: MouseEvent) {
+async function handleMonthListClick(event: Event) {
   let selectedMonth;
   if (
     event.target instanceof HTMLParagraphElement ||
@@ -155,9 +154,9 @@ async function handleMonthListClick(event: MouseEvent) {
 }
 
 function setLeadingComposition(data: IndicatorsResponse) {
-  const mainCode = data.find(v => v.isMainIndex)?.code;
+  const mainCode = data.find((v: Indicator) => v.isMainIndex)?.code;
   if (!mainCode) return;
-  data.forEach(value => {
+  data.forEach((value: Indicator) => {
     if (value.isMainIndex) return;
     const li = document.createElement('li');
     li.setAttribute(
@@ -182,9 +181,9 @@ function clearLeadingList() {
 }
 
 function setCoincidentComposition(data: IndicatorsResponse) {
-  const mainCode = data.find(v => v.isMainIndex)?.code;
+  const mainCode = data.find((v: Indicator) => v.isMainIndex)?.code;
   if (!mainCode) return;
-  data.forEach(value => {
+  data.forEach((value: Indicator) => {
     if (value.isMainIndex) return;
     const li = document.createElement('li');
     li.setAttribute(
@@ -250,7 +249,7 @@ async function setupData() {
 }
 const lineChart = (function () {
   let instance: Chart;
-  function setInstance(): Chart {
+  function setInstance() {
     const lineChart = $('#lineChart') as HTMLCanvasElement;
     const ctx = lineChart.getContext('2d') as CanvasRenderingContext2D;
     Chart.register(...registerables);
@@ -328,7 +327,7 @@ function makeChartdataset(arr: IndicatorsResponse): ChartDataset {
 function setChartData(arr1: IndicatorsResponse, arr2: IndicatorsResponse) {
   const chartLabel = arr1
     .slice()
-    .map(value =>
+    .map((value: Indicator) =>
       new Date(
         Number(value.month.slice(0, 4)),
         Number(value.month.slice(4)) - 1,
